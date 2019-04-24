@@ -8,9 +8,13 @@ public class Queries {
 
     //TODO create ride(as driver)
 
+
     //TODO get all rides given (as driver)
 
     //TODO get all rides recieved (as rider)
+
+    //TODO get total rides(as rider)
+
 
 
 }
