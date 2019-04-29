@@ -19,6 +19,7 @@ public class Main {
             System.out.println("Press key for user");
             System.out.println("Driver (D)");
             System.out.println("Rider (R)");
+            System.out.println("Close Program (Q)");
             String userType = input.next();
             if (userType.toUpperCase().equals("D")) {
                 driver = true;
@@ -26,6 +27,8 @@ public class Main {
             } else if (userType.toUpperCase().equals("R")) {
                 driver = false;
                 UserTypeLoop = false;
+            } else if (userType.toUpperCase().equals("Q")) {
+                System.exit(0);
             } else {
                 System.out.println("Invalid Key");
             }

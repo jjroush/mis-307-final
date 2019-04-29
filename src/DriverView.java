@@ -8,11 +8,14 @@ public class DriverView {
             System.out.println("Select Operation");
             System.out.println("Create Ride (C)");
             System.out.println("Get total rides given (T)");
+            System.out.println("Close Program (Q)");
             String Operation = input.next();
             switch(Operation.toUpperCase()){
                 case "C": createRide(dbConnection, input, Username);
                         break;
-                case "T": System.out.println("T");
+                case "T": getCountofDriverRides(dbConnection, Username);
+                        break;
+                case "Q":  System.exit(0);;
                         break;
                 default: System.out.println("Unknown Operation");
                         break;
@@ -51,11 +54,11 @@ public class DriverView {
         try {
             Statement stmt = dbConnection.createStatement();
             ResultSet rs = stmt.executeQuery(Queries.getCountofDriverRides(Username));
-
+            String count = "";
             while (rs.next()) {
-                String count = rs.getString(1);
+                count = rs.getString(1);
             }
-            System.out.println(count)
+            System.out.println(count);
         } catch (SQLException se) {
             se.printStackTrace();
         } catch (Exception e) {

@@ -19,7 +19,7 @@ public class Queries {
 
     public static String getCountofDriverRides(String dID)
     {
-        return "select COUNT(DriverID) from Transaction where DriverID =" + "\'" + dID + "\'";
+        return "select COUNT(D_Username) from Transaction where D_Username =" + "\'" + dID + "\'";
     }
 
     public static String getRiderRides(int rID)
