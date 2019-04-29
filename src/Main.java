@@ -1,5 +1,5 @@
 import java.sql.*;
-import java.sql.Statement;
+//import java.sql.Statement;
 
 import java.util.Scanner;
 
@@ -9,108 +9,66 @@ public class Main {
         Scanner input = new Scanner(System.in);
         boolean driver = false;
         boolean UserTypeLoop = true;
-        System.out.println("Press key for user");
-        System.out.println("Driver (D)");
-        System.out.println("Rider (R)");
-        String userType = input.next();
+        String user;
+        String pass;
+        String returnedUser = "";
+        Connection dbConnection = helpers.getRemoteConnection();
 
-        while(UserTypeLoop) {
+
+        while (UserTypeLoop) {
+            System.out.println("Press key for user");
+            System.out.println("Driver (D)");
+            System.out.println("Rider (R)");
+            String userType = input.next();
             if (userType.toUpperCase().equals("D")) {
                 driver = true;
+                UserTypeLoop = false;
             } else if (userType.toUpperCase().equals("R")) {
                 driver = false;
+                UserTypeLoop = false;
             } else {
                 System.out.println("Invalid Key");
             }
         }
-
-        if (driver) {
-            System.out.print("Enter Driver User: ");
-            System.out.print("Enter Driver Password: ");
-        } else {
-            System.out.print("Enter Rider User: ");
-            System.out.print("Enter Rider Password: ");
-        }
-
-        String code = helpers.getHash(input);
-        System.out.println("user hash" + code);
-        getRemoteConnection(code);
-        input.close();
-
-//        Scanner in = new Scanner(System.in);
-//        int Driver_count=0;
-//        double Daily_total=0;
-//        double Total_miles=0;
-//        int riders=0;
-//
-//        while(true)
-//        {
-//            System.out.print("Enter pick-up location: ");
-//            String pickup = in.nextLine();
-//
-//            System.out.print("Enter drop-off location: ");
-//            String dropoff=in.nextLine();
-//
-//            System.out.print("Enter number of miles: ");
-//            int miles=in.nextInt();
-//
-//            Total_miles+=miles;
-//            double amount=charge(pickup,dropoff,miles);
-//
-//            System.out.println("Cost: "+amount);
-//
-//            Daily_total+=amount;
-//            Driver_count++;
-//            riders++;
-//
-//            System.out.print("Do you want another ride?(y/n)");
-//            char x = in.next().charAt(0);
-//            if(x=='n')
-//            {
-//                break;
-//            }
-//            in.nextLine();
-//            System.out.println();
-//
-//        }
-//        in.close();
-////              riderReport(Miles_riden, Number_rides)
-////              driverReport(Miles_driven, Number_drives)
-//
-//    }
-//
-//
-//    private static double charge(String pickup, String dropoff, int miles) {
-//        double amount = 0;
-//        amount = miles * .50;
-//        return amount;
-//    }
-
-//private static void riderReport(double miles_riden, number_rides)
-//private static void driverReport(double Miles_driven, double number_drives)
-
-
-    }
-
-
-    private static Connection getRemoteConnection(String code) {
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                String jdbcUrl = "jdbc:mysql://mis-307-project-db.cde7ebxp3wt0.us-east-1.rds.amazonaws.com:3306";
-                System.out.println("Getting remote connection with connection string from environment variables.");
-                Connection con = DriverManager.getConnection(jdbcUrl,"master_login","mi$-307-PA$$43");
-                System.out.println("Remote connection successful.");
-                Statement stat = con.createStatement();
-                stat.execute("use `MIS 307 DB`");
-                ResultSet rs = stat.executeQuery(Queries.getDriverUserNameFromHash(code));
-                while(rs.next()) {
-                    System.out.println(rs.getString(2));
-                }
-                return con;
+        while (true) {
+            if (driver) {
+                System.out.print("Enter Driver User: ");
+                user = input.next();
+                System.out.print("Enter Driver Password: ");
+                pass = input.next();
+            } else {
+                System.out.print("Enter Rider User: ");
+                user = input.next();
+                System.out.print("Enter Rider Password: ");
+                pass = input.next();
             }
-            catch (ClassNotFoundException e) { System.out.println(e.toString());}
-            catch (SQLException e) { System.out.println(e.toString());}
 
-        return null;
+            try {
+                Statement stmt = dbConnection.createStatement();
+                ResultSet rs = stmt.executeQuery(Queries.getDriverUserNameFromHash(driver, helpers.getHash(pass)));
+
+                while (rs.next()) {
+                    returnedUser = rs.getString(1);
+                }
+
+            } catch (SQLException se) {
+                se.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (returnedUser.equals(user)) {
+                if (driver) {
+                    System.out.println("driver user");
+                    DriverView.main(input,dbConnection,user);
+                } else {
+                    System.out.println("rider user");
+                }
+//                input.close();
+            }
+
+        }
     }
+
+
 }
