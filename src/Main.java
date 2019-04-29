@@ -66,9 +66,11 @@ public class Main {
                     DriverView.main(input,dbConnection,user);
                 } else {
                     System.out.println("rider user");
+                    RiderView.main(input,dbConnection,user);
                 }
 //                input.close();
             }
+            System.out.println("Incorrect Credentials");
 
         }
     }
